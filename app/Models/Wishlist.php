@@ -18,7 +18,6 @@ class Wishlist extends Model
         'shop_id',
         'customer_id',
         'name',
-        'is_public',
         'is_default',
     ];
 
@@ -28,7 +27,6 @@ class Wishlist extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'is_public' => 'boolean',
         'is_default' => 'boolean',
     ];
 

@@ -22,19 +22,8 @@ class WishlistFactory extends Factory
             'shop_id' => Shop::factory(),
             'customer_id' => Customer::factory(),
             'name' => $this->faker->word() . ' Wishlist',
-            'is_public' => false,
             'is_default' => false,
         ];
-    }
-
-    /**
-     * Create a public wishlist.
-     */
-    public function public(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'is_public' => true,
-        ]);
     }
 
     /**

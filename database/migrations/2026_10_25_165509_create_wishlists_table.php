@@ -16,14 +16,12 @@ return new class extends Migration
             $table->foreignId('shop_id')->constrained()->cascadeOnDelete();
             $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->boolean('is_public')->default(false);
             $table->boolean('is_default')->default(false);
             $table->timestamps();
 
             $table->index('shop_id');
             $table->index('customer_id');
             $table->index(['shop_id', 'customer_id']);
-            $table->index(['shop_id', 'is_public']);
         });
     }
 
