@@ -13,14 +13,11 @@ return new class extends Migration
     {
         Schema::create('wishlists', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('shop_id');
-            $table->uuid('customer_id');
+            $table->foreignUuid('shop_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('customer_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->boolean('is_default')->default(false);
             $table->timestamps();
-
-            $table->foreign('shop_id')->references('id')->on('shops')->cascadeOnDelete();
-            $table->foreign('customer_id')->references('id')->on('customers')->cascadeOnDelete();
 
             $table->index('shop_id');
             $table->index('customer_id');

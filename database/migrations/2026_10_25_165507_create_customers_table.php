@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('shop_id');
+            $table->foreignUuid('shop_id')->constrained()->cascadeOnDelete();
             $table->string('shopify_customer_id')->unique();
             $table->string('email')->nullable();
             $table->string('first_name')->nullable();
@@ -21,8 +21,6 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->boolean('accepts_marketing')->default(false);
             $table->timestamps();
-
-            $table->foreign('shop_id')->references('id')->on('shops')->cascadeOnDelete();
 
             $table->index('shop_id');
             $table->index('shopify_customer_id');

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('wishlist_items', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('wishlist_id');
+            $table->foreignUuid('wishlist_id')->constrained()->cascadeOnDelete();
             $table->string('shopify_product_id');
             $table->string('shopify_variant_id')->nullable();
             $table->string('product_title');
@@ -24,8 +24,6 @@ return new class extends Migration
             $table->string('image_url')->nullable();
             $table->string('handle')->nullable();
             $table->timestamps();
-
-            $table->foreign('wishlist_id')->references('id')->on('wishlists')->cascadeOnDelete();
 
             $table->index('wishlist_id');
             $table->index('shopify_product_id');
