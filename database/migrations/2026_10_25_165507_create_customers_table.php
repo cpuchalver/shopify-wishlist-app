@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('customers', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('shop_id')->constrained()->cascadeOnDelete();
+            $table->uuid('id')->primary();
+            $table->uuid('shop_id');
             $table->string('shopify_customer_id')->unique();
             $table->string('email')->nullable();
             $table->string('first_name')->nullable();
@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->boolean('accepts_marketing')->default(false);
             $table->timestamps();
+
+            $table->foreign('shop_id')->references('id')->on('shops')->cascadeOnDelete();
 
             $table->index('shop_id');
             $table->index('shopify_customer_id');
