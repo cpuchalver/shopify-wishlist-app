@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Wishlist;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\WishlistItem>
@@ -17,20 +18,20 @@ class WishlistItemFactory extends Factory
      */
     public function definition(): array
     {
-        $productTitle = $this->faker->word();
-        $variantTitle = $this->faker->boolean() ? $this->faker->word() . ' Variant' : null;
+        $productTitle = Str::random(15);
+        $variantTitle = rand(0, 1) ? Str::random(10) . ' Variant' : null;
 
         return [
             'wishlist_id' => Wishlist::factory(),
-            'shopify_product_id' => 'gid://shopify/Product/' . $this->faker->uuid(),
-            'shopify_variant_id' => 'gid://shopify/ProductVariant/' . $this->faker->uuid(),
+            'shopify_product_id' => 'gid://shopify/Product/' . Str::uuid(),
+            'shopify_variant_id' => null,
             'product_title' => $productTitle,
-            'variant_title' => $variantTitle,
-            'price' => $this->faker->randomFloat(2, 10, 1000),
-            'compare_at_price' => $this->faker->boolean(30) ? $this->faker->randomFloat(2, 20, 1500) : null,
-            'quantity' => $this->faker->numberBetween(1, 10),
-            'image_url' => $this->faker->boolean(80) ? $this->faker->imageUrl() : null,
-            'handle' => strtolower(str_replace(' ', '-', $productTitle)) . '-' . $this->faker->randomNumber(5),
+            'variant_title' => null,
+            'price' => 19.99,
+            'compare_at_price' => null,
+            'quantity' => 1,
+            'image_url' => null,
+            'handle' => strtolower(str_replace(' ', '-', $productTitle)) . '-' . rand(10000, 99999),
         ];
     }
 

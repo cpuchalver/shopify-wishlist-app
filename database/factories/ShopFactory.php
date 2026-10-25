@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Shop>
@@ -16,16 +17,14 @@ class ShopFactory extends Factory
      */
     public function definition(): array
     {
-        $domain = $this->faker->domainName();
-
         return [
-            'name' => $this->faker->company(),
-            'domain' => "{$domain}.myshopify.com",
-            'shopify_shop_id' => 'gid://shopify/Shop/' . $this->faker->uuid(),
-            'access_token' => $this->faker->sha256(),
-            'email' => $this->faker->companyEmail(),
+            'name' => 'Test Shop',
+            'domain' => Str::random(10) . '.myshopify.com',
+            'shopify_shop_id' => 'gid://shopify/Shop/' . Str::uuid(),
+            'access_token' => Str::random(64),
+            'email' => Str::random(10) . '@example.com',
             'status' => 'active',
-            'installed_at' => $this->faker->dateTimeThisYear(),
+            'installed_at' => now(),
         ];
     }
 
