@@ -78,11 +78,26 @@ class ShopifyInstallController extends Controller
             abort(502, 'Unable to retrieve the Shopify access token.');
         }
 
+        $accessToken = $response->json('access_token');
+        $shopDomain = strtolower($validated['shop']);
+
+        $shopInfo = Http::withHeaders([
+            'X-Shopify-Access-Token' => $accessToken,
+        ])
+            ->acceptJson()
+            ->get("https://{$shopDomain}/admin/api/" . config('shopify.api_version') . '/shop.json');
+
+        if ($shopInfo->failed()) {
+            abort(502, 'Unable to retrieve the shop information.');
+        }
+
         Shop::updateOrCreate(
-            ['domain' => strtolower($validated['shop'])],
+            ['domain' => $shopDomain],
             [
-                'name' => strtolower($validated['shop']),
-                'access_token' => $response->json('access_token'),
+                'name' => $shopInfo->json('shop.name') ?? $shopDomain,
+                'shopify_shop_id' => 'gid://shopify/Shop/' . $shopInfo->json('shop.id'),
+                'email' => $shopInfo->json('shop.email'),
+                'access_token' => $accessToken,
                 'status' => 'active',
                 'installed_at' => now(),
             ],

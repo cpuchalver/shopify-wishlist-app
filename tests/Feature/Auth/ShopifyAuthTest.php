@@ -50,6 +50,13 @@ test('callback installs the shop with a valid hmac and state', function () {
         'test-shop.myshopify.com/admin/oauth/access_token' => Http::response([
             'access_token' => 'shpat-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
         ]),
+        'test-shop.myshopify.com/admin/api/*/shop.json' => Http::response([
+            'shop' => [
+                'id' => 1234567890,
+                'name' => 'Test Shop',
+                'email' => 'owner@test-shop.com',
+            ],
+        ]),
     ]);
 
     $response = $this->get('/shopify/auth/callback?' . http_build_query($params));
@@ -58,6 +65,9 @@ test('callback installs the shop with a valid hmac and state', function () {
 
     $shop = Shop::query()->where('domain', 'test-shop.myshopify.com')->first();
     expect($shop)->not->toBeNull()
+        ->and($shop->name)->toBe('Test Shop')
+        ->and($shop->shopify_shop_id)->toBe('gid://shopify/Shop/1234567890')
+        ->and($shop->email)->toBe('owner@test-shop.com')
         ->and($shop->access_token)->toBe('shpat-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
         ->and($shop->status)->toBe('active')
         ->and($shop->installed_at)->not->toBeNull();
