@@ -31,6 +31,7 @@ class Shop extends Model
         'shopify_shop_id',
         'access_token',
         'refresh_token',
+        'token_expires_at',
         'email',
         'status',
         'installed_at',
@@ -43,6 +44,7 @@ class Shop extends Model
      */
     protected $casts = [
         'installed_at' => 'datetime',
+        'token_expires_at' => 'datetime',
     ];
 
     /**

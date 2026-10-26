@@ -65,13 +65,12 @@ class ShopifyInstallController extends Controller
             abort(403, 'Invalid HMAC signature.');
         }
 
-        $response = Http::asJson()->post(
-            "https://{$validated['shop']}/admin/oauth/access_token",
+        $response = Http::asForm()->post(
+            "https://{$validated['shop']}/admin/oauth/access_token?" . http_build_query(['expiring' => 'true']),
             [
                 'client_id' => config('shopify.api_key'),
                 'client_secret' => config('shopify.api_secret'),
                 'code' => $validated['code'],
-                'expiring' => true,
             ],
         );
 
@@ -79,8 +78,14 @@ class ShopifyInstallController extends Controller
             abort(502, 'Unable to retrieve the Shopify access token.');
         }
 
-        $accessToken = $response->json('access_token');
+        if (blank($response->json('refresh_token'))) {
+            report("Shopify did not return a refresh token for {$shopDomain}; check that the app requests expiring offline tokens.");
+
+            abort(502, 'Unable to retrieve the Shopify refresh token.');
+        }
+
         $shopDomain = strtolower($validated['shop']);
+        $accessToken = $response->json('access_token');
 
         $shopInfo = Http::withHeaders([
             'X-Shopify-Access-Token' => $accessToken,
@@ -104,6 +109,7 @@ class ShopifyInstallController extends Controller
                 'email' => $shopInfo->json('data.shop.email'),
                 'access_token' => $accessToken,
                 'refresh_token' => $response->json('refresh_token'),
+                'token_expires_at' => now()->addSeconds((int) $response->json('expires_in', 3600)),
                 'status' => 'active',
                 'installed_at' => now(),
             ],

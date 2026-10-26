@@ -50,6 +50,7 @@ test('callback installs the shop with a valid hmac and state', function () {
         'test-shop.myshopify.com/admin/oauth/access_token' => Http::response([
             'access_token' => 'shpat-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
             'refresh_token' => 'shprr-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+            'expires_in' => 3600,
         ]),
         'test-shop.myshopify.com/admin/api/*/graphql.json' => Http::response([
             'data' => [
@@ -73,6 +74,8 @@ test('callback installs the shop with a valid hmac and state', function () {
         ->and($shop->email)->toBe('owner@test-shop.com')
         ->and($shop->access_token)->toBe('shpat-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
         ->and($shop->refresh_token)->toBe('shprr-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+        ->and($shop->token_expires_at)->not->toBeNull()
+        ->and($shop->token_expires_at->isFuture())->toBeTrue()
         ->and($shop->status)->toBe('active')
         ->and($shop->installed_at)->not->toBeNull();
 });
