@@ -104,6 +104,7 @@ class ShopifyInstallController extends Controller
                 'email' => $shopInfo->json('data.shop.email'),
                 'access_token' => $accessToken,
                 'refresh_token' => $response->json('refresh_token'),
+                'token_expires_at' => now()->addSeconds((int) $response->json('expires_in', 3600)),
                 'status' => 'active',
                 'installed_at' => now(),
             ],
