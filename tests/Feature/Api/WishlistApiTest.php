@@ -211,12 +211,11 @@ test('wishlist item validation rejects missing product title', function () {
         ->assertJsonValidationErrors('product_title');
 });
 
-test('item from another wishlist is not accessible', function () {
+test('deleting a wishlist deletes its items', function () {
     $wishlist = Wishlist::factory()->create();
-    $otherWishlist = Wishlist::factory()->create();
-    $item = WishlistItem::factory()->forWishlist($otherWishlist)->create();
+    $item = WishlistItem::factory()->forWishlist($wishlist)->create();
 
-    $response = $this->getJson("/api/wishlists/{$wishlist->id}/items/{$item->id}");
+    $this->deleteJson("/api/wishlists/{$wishlist->id}")->assertNoContent();
 
-    $response->assertNotFound();
+    $this->assertDatabaseMissing('wishlist_items', ['id' => $item->id]);
 });

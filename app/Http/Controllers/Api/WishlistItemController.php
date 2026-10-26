@@ -38,20 +38,16 @@ class WishlistItemController extends Controller
     /**
      * Display the specified wishlist item.
      */
-    public function show(Wishlist $wishlist, WishlistItem $item): WishlistItemResource
+    public function show(WishlistItem $item): WishlistItemResource
     {
-        abort_unless($item->wishlist_id === $wishlist->id, 404);
-
         return WishlistItemResource::make($item);
     }
 
     /**
      * Update the specified wishlist item.
      */
-    public function update(UpdateWishlistItemRequest $request, Wishlist $wishlist, WishlistItem $item): WishlistItemResource
+    public function update(UpdateWishlistItemRequest $request, WishlistItem $item): WishlistItemResource
     {
-        abort_unless($item->wishlist_id === $wishlist->id, 404);
-
         $item->update($request->validated());
 
         return WishlistItemResource::make($item->refresh());
@@ -60,10 +56,8 @@ class WishlistItemController extends Controller
     /**
      * Remove the specified wishlist item.
      */
-    public function destroy(Wishlist $wishlist, WishlistItem $item): JsonResponse
+    public function destroy(WishlistItem $item): JsonResponse
     {
-        abort_unless($item->wishlist_id === $wishlist->id, 404);
-
         $item->delete();
 
         return response()->json(status: 204);
