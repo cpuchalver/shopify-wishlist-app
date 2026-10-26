@@ -56,7 +56,9 @@ class ShopifyTokenRefresher
      */
     public function refreshIfExpiring(Shop $shop, int $marginSeconds = 300): void
     {
-        if ($shop->token_expires_at !== null && $shop->token_expires_at->isFuture() && $shop->token_expires_at->diffInRealSeconds(now()) > $marginSeconds) {
+        if ($shop->token_expires_at !== null
+            && $shop->token_expires_at->isFuture()
+            && now()->addSeconds($marginSeconds)->isBefore($shop->token_expires_at)) {
             return;
         }
 
