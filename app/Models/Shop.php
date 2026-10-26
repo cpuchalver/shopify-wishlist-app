@@ -30,6 +30,7 @@ class Shop extends Model
         'domain',
         'shopify_shop_id',
         'access_token',
+        'refresh_token',
         'email',
         'status',
         'installed_at',

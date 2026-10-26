@@ -71,6 +71,7 @@ class ShopifyInstallController extends Controller
                 'client_id' => config('shopify.api_key'),
                 'client_secret' => config('shopify.api_secret'),
                 'code' => $validated['code'],
+                'expiring' => true,
             ],
         );
 
@@ -102,6 +103,7 @@ class ShopifyInstallController extends Controller
                 'shopify_shop_id' => $shopInfo->json('data.shop.id'),
                 'email' => $shopInfo->json('data.shop.email'),
                 'access_token' => $accessToken,
+                'refresh_token' => $response->json('refresh_token'),
                 'status' => 'active',
                 'installed_at' => now(),
             ],
