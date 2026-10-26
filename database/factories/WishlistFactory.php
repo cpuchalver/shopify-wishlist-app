@@ -4,11 +4,12 @@ namespace Database\Factories;
 
 use App\Models\Customer;
 use App\Models\Shop;
+use App\Models\Wishlist;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Wishlist>
+ * @extends Factory<Wishlist>
  */
 class WishlistFactory extends Factory
 {
@@ -22,7 +23,7 @@ class WishlistFactory extends Factory
         return [
             'shop_id' => Shop::factory(),
             'customer_id' => Customer::factory(),
-            'name' => Str::random(10) . ' Wishlist',
+            'name' => Str::random(10).' Wishlist',
             'is_default' => false,
         ];
     }
