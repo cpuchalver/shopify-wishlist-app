@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreWishlistRequest;
+use App\Http\Requests\UpdateWishlistRequest;
 use App\Http\Resources\WishlistResource;
 use App\Models\Wishlist;
 use Illuminate\Database\Eloquent\Builder;
@@ -36,16 +38,9 @@ class WishlistController extends Controller
     /**
      * Store a newly created wishlist.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreWishlistRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'shop_id' => ['required', 'uuid', 'exists:shops,id'],
-            'customer_id' => ['required', 'uuid', 'exists:customers,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'is_default' => ['boolean'],
-        ]);
-
-        $wishlist = Wishlist::create($validated);
+        $wishlist = Wishlist::create($request->validated());
 
         return WishlistResource::make($wishlist->load('items'))
             ->response()
@@ -63,14 +58,9 @@ class WishlistController extends Controller
     /**
      * Update the specified wishlist.
      */
-    public function update(Request $request, Wishlist $wishlist): WishlistResource
+    public function update(UpdateWishlistRequest $request, Wishlist $wishlist): WishlistResource
     {
-        $validated = $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'is_default' => ['sometimes', 'boolean'],
-        ]);
-
-        $wishlist->update($validated);
+        $wishlist->update($request->validated());
 
         return WishlistResource::make($wishlist->load('items'));
     }

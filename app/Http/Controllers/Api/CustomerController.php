@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,19 +33,9 @@ class CustomerController extends Controller
     /**
      * Store a newly created customer.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreCustomerRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'shop_id' => ['required', 'uuid', 'exists:shops,id'],
-            'shopify_customer_id' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:255'],
-            'accepts_marketing' => ['boolean'],
-        ]);
-
-        $customer = Customer::create($validated);
+        $customer = Customer::create($request->validated());
 
         return CustomerResource::make($customer)
             ->response()
@@ -61,17 +53,9 @@ class CustomerController extends Controller
     /**
      * Update the specified customer.
      */
-    public function update(Request $request, Customer $customer): CustomerResource
+    public function update(UpdateCustomerRequest $request, Customer $customer): CustomerResource
     {
-        $validated = $request->validate([
-            'email' => ['sometimes', 'required', 'email', 'max:255'],
-            'first_name' => ['sometimes', 'required', 'string', 'max:255'],
-            'last_name' => ['sometimes', 'required', 'string', 'max:255'],
-            'phone' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'accepts_marketing' => ['sometimes', 'boolean'],
-        ]);
-
-        $customer->update($validated);
+        $customer->update($request->validated());
 
         return CustomerResource::make($customer->refresh());
     }

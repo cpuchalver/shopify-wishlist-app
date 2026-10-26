@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreShopRequest;
+use App\Http\Requests\UpdateShopRequest;
+use App\Http\Resources\ShopResource;
 use App\Models\Shop;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -30,19 +33,9 @@ class ShopController extends Controller
     /**
      * Store a newly created shop.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreShopRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'domain' => ['required', 'string', 'max:255'],
-            'shopify_shop_id' => ['required', 'string', 'max:255'],
-            'access_token' => ['nullable', 'string', 'max:255'],
-            'email' => ['nullable', 'email', 'max:255'],
-            'status' => ['nullable', 'string', 'max:255'],
-            'installed_at' => ['nullable', 'date'],
-        ]);
-
-        $shop = Shop::create($validated);
+        $shop = Shop::create($request->validated());
 
         return ShopResource::make($shop)
             ->response()
@@ -60,17 +53,9 @@ class ShopController extends Controller
     /**
      * Update the specified shop.
      */
-    public function update(Request $request, Shop $shop): ShopResource
+    public function update(UpdateShopRequest $request, Shop $shop): ShopResource
     {
-        $validated = $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'domain' => ['sometimes', 'required', 'string', 'max:255'],
-            'access_token' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'email' => ['sometimes', 'nullable', 'email', 'max:255'],
-            'status' => ['sometimes', 'nullable', 'string', 'max:255'],
-        ]);
-
-        $shop->update($validated);
+        $shop->update($request->validated());
 
         return ShopResource::make($shop->refresh());
     }
