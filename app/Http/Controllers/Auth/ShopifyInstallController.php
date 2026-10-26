@@ -85,10 +85,12 @@ class ShopifyInstallController extends Controller
             'X-Shopify-Access-Token' => $accessToken,
         ])
             ->acceptJson()
-            ->get("https://{$shopDomain}/admin/api/" . config('shopify.api_version') . '/shop.json');
+            ->post("https://{$shopDomain}/admin/api/" . config('shopify.api_version') . '/graphql.json', [
+                'query' => 'query { shop { id name email } }',
+            ]);
 
-        if ($shopInfo->failed() || blank($shopInfo->json('shop.id'))) {
-            report("Shopify shop.json failed for {$shopDomain}: " . $shopInfo->status() . ' ' . (string) $shopInfo->body());
+        if ($shopInfo->failed() || blank($shopInfo->json('data.shop.id'))) {
+            report("Shopify shop query failed for {$shopDomain}: " . $shopInfo->status() . ' ' . (string) $shopInfo->body());
 
             abort(502, 'Unable to retrieve the shop information (' . $shopInfo->status() . ').');
         }
@@ -96,9 +98,9 @@ class ShopifyInstallController extends Controller
         Shop::updateOrCreate(
             ['domain' => $shopDomain],
             [
-                'name' => $shopInfo->json('shop.name') ?? $shopDomain,
-                'shopify_shop_id' => 'gid://shopify/Shop/' . $shopInfo->json('shop.id'),
-                'email' => $shopInfo->json('shop.email'),
+                'name' => $shopInfo->json('data.shop.name') ?? $shopDomain,
+                'shopify_shop_id' => $shopInfo->json('data.shop.id'),
+                'email' => $shopInfo->json('data.shop.email'),
                 'access_token' => $accessToken,
                 'status' => 'active',
                 'installed_at' => now(),

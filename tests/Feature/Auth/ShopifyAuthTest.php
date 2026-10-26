@@ -50,11 +50,13 @@ test('callback installs the shop with a valid hmac and state', function () {
         'test-shop.myshopify.com/admin/oauth/access_token' => Http::response([
             'access_token' => 'shpat-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
         ]),
-        'test-shop.myshopify.com/admin/api/*/shop.json' => Http::response([
-            'shop' => [
-                'id' => 1234567890,
-                'name' => 'Test Shop',
-                'email' => 'owner@test-shop.com',
+        'test-shop.myshopify.com/admin/api/*/graphql.json' => Http::response([
+            'data' => [
+                'shop' => [
+                    'id' => 'gid://shopify/Shop/1234567890',
+                    'name' => 'Test Shop',
+                    'email' => 'owner@test-shop.com',
+                ],
             ],
         ]),
     ]);
