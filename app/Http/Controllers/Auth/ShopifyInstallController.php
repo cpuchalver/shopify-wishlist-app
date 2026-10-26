@@ -87,8 +87,10 @@ class ShopifyInstallController extends Controller
             ->acceptJson()
             ->get("https://{$shopDomain}/admin/api/" . config('shopify.api_version') . '/shop.json');
 
-        if ($shopInfo->failed()) {
-            abort(502, 'Unable to retrieve the shop information.');
+        if ($shopInfo->failed() || blank($shopInfo->json('shop.id'))) {
+            report("Shopify shop.json failed for {$shopDomain}: " . $shopInfo->status() . ' ' . (string) $shopInfo->body());
+
+            abort(502, 'Unable to retrieve the shop information (' . $shopInfo->status() . ').');
         }
 
         Shop::updateOrCreate(
