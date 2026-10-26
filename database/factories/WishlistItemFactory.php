@@ -3,10 +3,11 @@
 namespace Database\Factories;
 
 use App\Models\Wishlist;
+use App\Models\WishlistItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\WishlistItem>
+ * @extends Factory<WishlistItem>
  */
 class WishlistItemFactory extends Factory
 {
@@ -22,7 +23,7 @@ class WishlistItemFactory extends Factory
 
         return [
             'wishlist_id' => Wishlist::factory(),
-            'shopify_product_id' => 'gid://shopify/Product/' . $this->faker->unique()->bothify('########'),
+            'shopify_product_id' => 'gid://shopify/Product/'.$this->faker->unique()->bothify('########'),
             'shopify_variant_id' => null,
             'product_title' => $productTitle,
             'variant_title' => null,
@@ -30,7 +31,7 @@ class WishlistItemFactory extends Factory
             'compare_at_price' => null,
             'quantity' => 1,
             'image_url' => $this->faker->imageUrl(500, 500, null, false, $productTitle, true),
-            'handle' => strtolower(str_replace(' ', '-', $productTitle)) . '-' . rand(10000, 99999),
+            'handle' => strtolower(str_replace(' ', '-', $productTitle)).'-'.rand(10000, 99999),
         ];
     }
 

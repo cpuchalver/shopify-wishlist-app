@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Shop;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Shop>
+ * @extends Factory<Shop>
  */
 class ShopFactory extends Factory
 {
@@ -19,8 +20,8 @@ class ShopFactory extends Factory
     {
         return [
             'name' => 'Test Shop',
-            'domain' => $this->faker->unique()->domainWord() . '.myshopify.com',
-            'shopify_shop_id' => 'gid://shopify/Shop/' . $this->faker->unique()->bothify('########'),
+            'domain' => $this->faker->unique()->domainWord().'.myshopify.com',
+            'shopify_shop_id' => 'gid://shopify/Shop/'.$this->faker->unique()->bothify('########'),
             'access_token' => Str::random(64),
             'email' => $this->faker->safeEmail(),
             'status' => 'active',
