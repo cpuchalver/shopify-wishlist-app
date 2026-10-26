@@ -45,7 +45,7 @@ class WishlistItemTest extends TestCase
         $this->assertNull($item->shopify_variant_id);
         $this->assertNull($item->variant_title);
         $this->assertNull($item->compare_at_price);
-        $this->assertNull($item->image_url);
+        $this->assertNotNull($item->image_url);
         $this->assertNotNull($item->handle);
     }
 

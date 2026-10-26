@@ -19,10 +19,10 @@ class ShopFactory extends Factory
     {
         return [
             'name' => 'Test Shop',
-            'domain' => Str::random(10) . '.myshopify.com',
-            'shopify_shop_id' => 'gid://shopify/Shop/' . Str::uuid(),
+            'domain' => $this->faker->unique()->domainWord() . '.myshopify.com',
+            'shopify_shop_id' => 'gid://shopify/Shop/' . $this->faker->unique()->bothify('########'),
             'access_token' => Str::random(64),
-            'email' => Str::random(10) . '@example.com',
+            'email' => $this->faker->safeEmail(),
             'status' => 'active',
             'installed_at' => now(),
         ];

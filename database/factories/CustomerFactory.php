@@ -20,11 +20,11 @@ class CustomerFactory extends Factory
     {
         return [
             'shop_id' => Shop::factory(),
-            'shopify_customer_id' => 'gid://shopify/Customer/' . Str::uuid(),
-            'email' => Str::random(10) . '@example.com',
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'phone' => Str::random(10),
+            'shopify_customer_id' => 'gid://shopify/Customer/' . $this->faker->unique()->bothify('########'),
+            'email' => $this->faker->safeEmail(),
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'phone' => $this->faker->phoneNumber(),
             'accepts_marketing' => false,
         ];
     }
